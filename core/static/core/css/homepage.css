@@ -53,3 +53,20 @@
     display: flex;
     justify-content: space-between;
 }
+.status{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 50px;
+    padding-bottom: 150px;
+}
+.error, .recomend{
+    width: 45%;
+    border: 1px solid;
+}
+.error-list, .recomend-list{
+    margin-top: 25px;
+    
+}
+.error-list p{
+    list-style: circle;
+}

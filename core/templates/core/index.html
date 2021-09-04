@@ -12,6 +12,10 @@
 <body>
     <div class="header">
         <div class="header__name">{{object_list.user.name}}</div>
+        <div class="header__risk">
+            Стоимость портфеля: {{object_list.all_price_rub}} рублей <br>
+            Стоимость портфеля: {{object_list.all_price_dol}} долларов
+        </div>
         <div class="header__risk">{{object_list.user.type_risk}}</div>
     </div>
     <div class="main">
@@ -85,6 +89,24 @@
         </div>
         
         
+    </div>
+    <div class="status">
+        <div class="error">
+            <h2>Риски портфеля</h2>
+            <div class="error-list">
+                {% for item in object_list.error%}
+                    <p>{{ item }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="recomend">
+            <h2>Рекомендации</h2>
+            <div class="recomend-list">
+                {% for item in object_list.recomend%}
+                    <p>{{ item }}</p>
+                {% endfor %}
+            </div>
+        </div>
     </div>
     <script src="https://unpkg.com/vue@next"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>
