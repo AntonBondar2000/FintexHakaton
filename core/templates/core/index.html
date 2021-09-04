@@ -102,23 +102,41 @@
         
     </div>
     <div class="status">
-        <div class="error">
-            <h2>Риски портфеля</h2>
-            <div class="error-list">
-                {% for item in object_list.error%}
-                    <p>{{ item }}</p>
-                {% endfor %}
+           
+                <p>
+                    <a class="btn btn-outline-danger btn-lg" data-bs-toggle="collapse" href="#test_1" role="button" aria-expanded="false" aria-controls="collapseExample">
+                      Риски портфеля
+                    </a>
+                    
+                  </p>
+                  <div class="collapse" id="test_1">
+                    <div class="card card-body">
+                        <div class="error-list">
+                            {% for item in object_list.error%}
+                                <p>{{ item }}</p>
+                            {% endfor %}
+                    </div>
+
+
             </div>
         </div>
-        <div class="recomend">
-            <h2>Рекомендации</h2>
-            <div class="recomend-list">
-                {% for item in object_list.recomend%}
-                    <p>{{ item }}</p>
-                {% endfor %}
+            
+        <p>
+            <a class="btn btn-outline-info btn-lg" data-bs-toggle="collapse" href="#test_2" role="button" aria-expanded="false" aria-controls="collapseExample">
+              Рекомендации
+            </a>
+            
+          </p>
+          <div class="collapse" id="test_2">
+            <div class="card card-body">
+                <div class="recomend-list">
+                    {% for item in object_list.recomend%}
+                        <p>{{ item }}</p>
+                    {% endfor %}
             </div>
+
+
         </div>
-    </div>
     <script src="https://unpkg.com/vue@next"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>

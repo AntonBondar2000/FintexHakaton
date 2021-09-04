@@ -31,7 +31,7 @@ class Home(ListView):
             'stock': stock,
             'error': error,
             'recomend': recomend,
-            'all_price_rub': all_price,
+            'all_price_rub': round(all_price, 2),
             'all_price_dol': round(all_price/76, 2),
             'all_users': all_users
         }
@@ -74,8 +74,8 @@ class Home(ListView):
                         comment_message += " и докупить активы в других валютах"
             error_message_container.append(error_message)
             comment_message_container.append(comment_message)
-        error_type_obligation = divers_type.get("Облигация", None)
-        if error_type_obligation and error_type_obligation < 80:
+        error_type_obligation = divers_type.get("Облигация", True)
+        if error_type_obligation < 80 and error_type_obligation:
             error_message = 'В вашем активе меньше 80% облигаций, поэтому большой риск потери инвестиции'
             comment_message = 'Докупите облигации'
 
@@ -121,10 +121,11 @@ class Home(ListView):
                         comment_message += " и докупить активы в других валютах"
             error_message_container.append(error_message)
             comment_message_container.append(comment_message)
-        error_type_stock = divers_type.get("Акция", None)
-        error_type_obligation = divers_type.get("Облигация", None)
-        if error_type_stock and 60 < error_type_stock < 50:
-            if error_type_obligation and 50 < error_type_obligation < 40:
+        error_type_stock = divers_type.get("Акция", True)
+        print(error_type_stock)
+        error_type_obligation = divers_type.get("Облигация", True)
+        if error_type_stock and (error_type_stock < 50 or error_type_stock > 60):
+            if error_type_obligation and (error_type_obligation < 40 or error_type_obligation > 50):
                 error_message = 'У вас не правильное распределение типов активов'
                 comment_message = 'Нужно добиться следующих показателей: акции - от 50 до 60, облигации - от 40 до 50'
             else:
@@ -172,7 +173,7 @@ class Home(ListView):
                         comment_message += " и докупить активы в других валютах"
             error_message_container.append(error_message)
             comment_message_container.append(comment_message)
-        error_type = divers_type.get("Акция", None)
+        error_type = divers_type.get("Акция", True)
         if error_type and error_type < 80:
             error_message = 'В вашем активе меньше 80% акции, чего не достаточно для получения желаемой прибыли'
             comment_message = 'Докупите акции'

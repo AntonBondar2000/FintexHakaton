@@ -50,14 +50,15 @@ class TypeStock(models.Model):
 class Stock(models.Model):
     name = models.CharField(max_length=255)
     volume = models.PositiveIntegerField()
+    devidents = models.FloatField()
     price = models.FloatField()
+    risk = models.FloatField()
     type = models.ForeignKey(
         TypeStock,
         blank=True,
         null=True,
         on_delete=models.CASCADE,
     )
-    start_price = models.FloatField()
     currency = models.ForeignKey(
         Currency,
         blank=True,
@@ -80,6 +81,9 @@ class Stock(models.Model):
 
 class Package(models.Model):
     count = models.PositiveIntegerField()
+    start_price = models.FloatField()
+    now_price = models.FloatField()
+    date_buy = models.DateField()
     stock = models.ForeignKey(
         Stock,
         blank=True,
@@ -95,23 +99,6 @@ class Package(models.Model):
     class Meta:
         verbose_name = ('Package')
         verbose_name_plural = ('Packages')
-
-    def __str__(self):
-        return str(self.id)
-
-
-class DeltaPrice(models.Model):
-    date = models.DateField()
-    price = models.FloatField()
-    stock = models.ForeignKey(
-        Stock,
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE,
-    )
-    class Meta:
-        verbose_name = ('Delta Price')
-        verbose_name_plural = ('Delta Prices')
 
     def __str__(self):
         return str(self.id)
