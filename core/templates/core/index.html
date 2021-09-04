@@ -7,6 +7,31 @@
     <title>Document</title>
 </head>
 <body>
-    привет!
+    <div style="display: flex; justify-content: space-between; padding: 50px 120px;">
+        <div>{{object_list.user.name}}</div>
+        <div>{{object_list.user.type_risk}}</div>
+    </div>
+    <div style="padding: 10px 120px; border-top: 1px solid; display: flex; justify-content: space-between;">
+        <div style="width: 30%;">
+            <h1> Инвестиции </h1>
+            {% for item in object_list.stock %}
+            <p>{{item.name}} - {{item.type__name}} - {{item.price}} {{item.currency__name}} - {{item.branch__name}} - {{item.package__count}} шт</p>
+            {% endfor %}
+        </div>
+        <div style="width: 60%;">
+            <h1> Характеристики</h1>
+            {% for key, value in object_list.divBranch.items %}
+                <div style="margin-top: 20px;">{{key}} - {{value}} %</div>
+            {% endfor %}
+            <hr>
+            {% for key, value in object_list.divType.items %}
+                <div style="margin-top: 20px;">{{key}} - {{value}} %</div>
+            {% endfor %}
+            <hr>
+            {% for key, value in object_list.divCurrency.items %}
+                <div style="margin-top: 20px;">{{key}} - {{value}} %</div>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 </html>

@@ -5,7 +5,9 @@ from .models import (
     Stock,
     TypeStock,
     DeltaPrice,
-    Package
+    Package,
+    Branch,
+    Currency
 )
 
 
@@ -15,3 +17,5 @@ admin.site.register(Stock)
 admin.site.register(TypeStock)
 admin.site.register(DeltaPrice)
 admin.site.register(Package)
+admin.site.register(Branch)
+admin.site.register(Currency)
