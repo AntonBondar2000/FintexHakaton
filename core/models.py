@@ -93,11 +93,6 @@ class Package(models.Model):
 
     def __str__(self):
         return str(self.id)
-    
-    def get_divers_branch(self):
-        
-        print("a;egadmgpoag")
-        return None
 
 
 class DeltaPrice(models.Model):

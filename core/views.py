@@ -12,10 +12,8 @@ class Home(ListView):
         divers_branch = self.get_divers_branch()
         divers_type = self.get_divers_type()
         divers_currency = self.get_diver_currency()
-        print(divers_currency)
         user = Profile.objects.get(id=1)
         stock = Stock.objects.filter(package__profile=user).values('name', 'type__name', 'currency__name', 'price', 'branch__name', 'package__count')
-        print(stock)
         return {
             'divBranch': divers_branch,
             'divType': divers_type,
