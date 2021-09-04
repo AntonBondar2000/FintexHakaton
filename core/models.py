@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 class TypeRisk(models.Model):
     name = models.CharField(max_length=255)
@@ -22,6 +23,10 @@ class Profile(models.Model):
         verbose_name_plural = ('Profiles')
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('home', args=[self.id])
+
 
 class Branch(models.Model):
     name = models.CharField(max_length=150)

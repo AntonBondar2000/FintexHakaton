@@ -11,6 +11,7 @@ class Home(ListView):
     def get_queryset(self):
         id = self.kwargs.get('id')
         divers_branch = self.get_divers_branch(id)
+        all_users = Profile.objects.all()
         divers_type = self.get_divers_type(id)
         divers_currency, all_price = self.get_diver_currency(id)
         user = Profile.objects.get(id=id)
@@ -31,7 +32,8 @@ class Home(ListView):
             'error': error,
             'recomend': recomend,
             'all_price_rub': all_price,
-            'all_price_dol': round(all_price/76, 2)
+            'all_price_dol': round(all_price/76, 2),
+            'all_users': all_users
         }
 
     def recomend_conserv(self, divers_branch, divers_type, divers_currency):
