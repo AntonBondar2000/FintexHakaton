@@ -1,14 +1,17 @@
 from django.db import models
 from django.urls import reverse
 
+
 class TypeRisk(models.Model):
     name = models.CharField(max_length=255)
+    desc = models.TextField(blank=True, null=True)
     class Meta:
         verbose_name = ('Type Risk')
         verbose_name_plural = ('Type Risks')
 
     def __str__(self):
         return self.name
+
 
 class Profile(models.Model):
     name = models.CharField(max_length=255)
@@ -33,10 +36,12 @@ class Branch(models.Model):
     def __str__(self):
         return self.name
 
+
 class Currency(models.Model):
     name = models.CharField(max_length=150)
     def __str__(self):
         return self.name
+
 
 class TypeStock(models.Model):
     name = models.CharField(max_length=255)
@@ -46,6 +51,7 @@ class TypeStock(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Stock(models.Model):
     name = models.CharField(max_length=255)
@@ -91,10 +97,10 @@ class Package(models.Model):
         on_delete=models.CASCADE,
     )
     profile = models.ForeignKey(
-            Profile,
-            blank=True,
-            null=True,
-            on_delete=models.CASCADE,
+        Profile,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
     )
     class Meta:
         verbose_name = ('Package')

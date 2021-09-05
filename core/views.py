@@ -4,6 +4,9 @@ from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView, BaseDetailView
 from .models import Package, Profile, Branch, Stock, TypeStock, Currency
 from django.db.models import Q
+from dateutil.parser import parse as du_parse
+from dateutil.relativedelta import relativedelta
+import datetime
 
 class Home(ListView):
     template_name = "core/index.html"
@@ -15,14 +18,15 @@ class Home(ListView):
         divers_type = self.get_divers_type(id)
         divers_currency, all_price = self.get_diver_currency(id)
         user = Profile.objects.get(id=id)
+        profit = self.profit_package(id)
         error, recomend = [], []
+        stock = Stock.objects.filter(package__profile=user).values('name', 'type__name', 'currency__name', 'price', 'branch__name', 'package__count', 'risk')
         if user.type_risk.name == "Агрессивный":
-            error, recomend = self.recomend_agressive(divers_branch, divers_type, divers_currency)
+            error, recomend = self.recomend_agressive(divers_branch, divers_type, divers_currency, stock)
         elif user.type_risk.name == "Умеренный":
-            error, recomend = self.recomend_normal(divers_branch, divers_type, divers_currency)
+            error, recomend = self.recomend_normal(divers_branch, divers_type, divers_currency, stock)
         elif user.type_risk.name == "Консервативный":
-            error, recomend = self.recomend_conserv(divers_branch, divers_type, divers_currency)
-        stock = Stock.objects.filter(package__profile=user).values('name', 'type__name', 'currency__name', 'price', 'branch__name', 'package__count')
+            error, recomend = self.recomend_conserv(divers_branch, divers_type, divers_currency, stock)
         return {
             'divBranch': divers_branch,
             'divType': divers_type,
@@ -33,10 +37,24 @@ class Home(ListView):
             'recomend': recomend,
             'all_price_rub': round(all_price, 2),
             'all_price_dol': round(all_price/76, 2),
-            'all_users': all_users
+            'all_users': all_users,
+            'profit': round(profit, 2)
         }
-
-    def recomend_conserv(self, divers_branch, divers_type, divers_currency):
+    def profit_package(self, id):
+        pak = Package.objects.filter(profile_id=id)
+        profit = 0
+        for item in pak:
+            now_price = item.now_price
+            start_price = item.start_price
+            count = item.count
+            devident = item.stock.devidents
+            delta = relativedelta(du_parse(str(datetime.datetime.now())), du_parse(str(item.date_buy))).months
+            tmp = (now_price - start_price)*count + devident*delta
+            tmp = tmp if item.stock.currency.name == "Руб" else tmp * 76
+            profit += tmp
+        return profit
+        
+    def recomend_conserv(self, divers_branch, divers_type, divers_currency, stock):
         error_message_container = []
         comment_message_container = []
         error_message = ""
@@ -49,9 +67,9 @@ class Home(ListView):
                     error_message += "'" + str(item) + "'"
                     if (index != len(error_branch) - 1):
                         error_message += ", "
-                comment_message = 'Рекомендуем перераспределить активы по разным отраслям'
+                comment_message = 'Рекомендуем перераспределить активы по разным отраслям, путем покупки новых облигаций и продажи текущих ценных бумаг'
         else:
-            error_message = 'В вашем портфеле скудный набор отраслей'
+            error_message = 'Ваш портфель покрывает небольшой набор отраслей, для уменьшения риска, необходимо иметь акции хотя бы 7 отраслей'
             comment_message = 'Рекомендуем приобрести ценные бумаги из различных отраслей'
         error_message_container.append(error_message)
         comment_message_container.append(comment_message)
@@ -81,9 +99,18 @@ class Home(ListView):
 
             error_message_container.append(error_message)
             comment_message_container.append(comment_message)
+        
+        stock_without_risk = stock.filter(risk__gte=1)
+        if len(stock_without_risk)!= 0:
+            error_message = 'В вашем портфеле есть активы с высоким уровнем риска'
+            comment_message = 'Рекомендуем продать активы, с риском больше 1'
+
+            error_message_container.append(error_message)
+            comment_message_container.append(comment_message)
+
         return error_message_container, comment_message_container
 
-    def recomend_normal(self, divers_branch, divers_type, divers_currency):
+    def recomend_normal(self, divers_branch, divers_type, divers_currency, stock):
         error_message_container = []
         comment_message_container = []
         error_message = ""
@@ -96,9 +123,9 @@ class Home(ListView):
                     error_message += "'" + str(item) + "'"
                     if (index != len(error_branch) - 1):
                         error_message += ", "
-                comment_message = 'Рекомендуем перераспределить активы по разным отраслям'
+                comment_message = 'Рекомендуем перераспределить активы по разным отраслям, для уменьшения риска, необходимо иметь акции хотя бы 5 отраслей'
         else:
-            error_message = 'В вашем портфеле скудный набор отраслей'
+            error_message = 'Ваш портфель покрывает небольшой набор отраслей'
             comment_message = 'Рекомендуем приобрести ценные бумаги из различных отраслей'
         error_message_container.append(error_message)
         comment_message_container.append(comment_message)
@@ -108,7 +135,7 @@ class Home(ListView):
             error_message_container.append(error_message)
             comment_message_container.append(comment_message)
         else:
-            error_currency = [key for key, items in divers_currency.items() if divers_currency[key] >=60 ]
+            error_currency = [key for key, items in divers_currency.items() if divers_currency[key] >= 60 ]
             if len(error_currency) > 0:
                 error_message = 'В вашем портфеле преобладают активы в следующих валютах: '
                 comment_message = 'Рекомендуем продать активы в следующих валютах: '
@@ -122,7 +149,6 @@ class Home(ListView):
             error_message_container.append(error_message)
             comment_message_container.append(comment_message)
         error_type_stock = divers_type.get("Акция", True)
-        print(error_type_stock)
         error_type_obligation = divers_type.get("Облигация", True)
         if error_type_stock and (error_type_stock < 50 or error_type_stock > 60):
             if error_type_obligation and (error_type_obligation < 40 or error_type_obligation > 50):
@@ -133,9 +159,23 @@ class Home(ListView):
                 comment_message = 'Нужно добиться следующих показателей: акции - от 50 до 60'
             error_message_container.append(error_message)
             comment_message_container.append(comment_message)
+
+        stock_without_risk = stock.filter(risk__gte=1)
+        if len(stock_without_risk) > 3:
+            error_message = 'В вашем портфеле много активов с высоким уровнем риска'
+            comment_message = 'Рекомендуем оставить не больше 3 активов с высоким уровнем риска'
+
+            error_message_container.append(error_message)
+            comment_message_container.append(comment_message)
+        elif len(stock_without_risk) == 0:
+            error_message = 'В вашем портфеле нет активов с повышенным уровнем риска'
+            comment_message = 'Рекомендуем купить несколько активов с повышенным уровнем риска, для увеличения прибыли'
+
+            error_message_container.append(error_message)
+            comment_message_container.append(comment_message)
         return error_message_container, comment_message_container
 
-    def recomend_agressive(self, divers_branch, divers_type, divers_currency):
+    def recomend_agressive(self, divers_branch, divers_type, divers_currency, stock):
         error_message_container = []
         comment_message_container = []
         error_message = ""
@@ -150,7 +190,7 @@ class Home(ListView):
                         error_message += ", "
                 comment_message = 'Рекомендуем перераспределить активы по разным отраслям'
         else:
-            error_message = 'В вашем портфеле скудный набор отраслей'
+            error_message = 'Ваш портфель покрывает небольшой набор отраслей'
             comment_message = 'Рекомендуем приобрести ценные бумаги из различных отраслей'
         error_message_container.append(error_message)
         comment_message_container.append(comment_message)
@@ -177,6 +217,13 @@ class Home(ListView):
         if error_type and error_type < 80:
             error_message = 'В вашем активе меньше 80% акции, чего не достаточно для получения желаемой прибыли'
             comment_message = 'Докупите акции'
+            error_message_container.append(error_message)
+            comment_message_container.append(comment_message)
+        stock_without_risk = stock.filter(risk__gte=1)
+        if len(stock_without_risk) < 5:
+            error_message = 'В вашем портфеле не хватает активов с высоким уровнем риска, из-за этого может упасть доход'
+            comment_message = 'Рекомендуем купить больше активов с высоким уровнем риска'
+
             error_message_container.append(error_message)
             comment_message_container.append(comment_message)
         return error_message_container, comment_message_container

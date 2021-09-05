@@ -1,18 +1,183 @@
 {% load static %}
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Модуль аналитики</title>
     <link rel="stylesheet" href="{% static 'core/css/homepage.css' %}" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
 </head>
+
 <body>
-    <div class="header">
+    <header>
+        <div class="user">
+            <div class="user__text">
+                {{ object_list.user.name }}
+            </div>
+            <div 
+                class="user__text" 
+                title="{{ object_list.user.type_risk.desc }}"
+            >
+                Риск пользователя: {{ object_list.user.type_risk.name }}
+            </div>
+        </div>
+        <div class="dropdown">
+            <button 
+                class="btn btn-info dropdown-toggle" 
+                type="button" 
+                id="dropdownMenuButton1"
+                data-bs-toggle="dropdown" 
+                aria-expanded="false"
+            >
+                Выбор пользователя:
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                {% for item in object_list.all_users %}
+                    <li>
+                        <a class="dropdown-item" href="{{item.get_absolute_url}}">
+                            {{ item.name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </header>
+    <section class="portfolio">
+        <h1>Портфолио</h1>
+        <div class="portfolio__chars">
+            <div class="portfolio__text">
+                Стоимость портфеля: {{ object_list.all_price_rub }} рублей
+            </div>
+            <div class="portfolio__text">
+                Доход: {{ object_list.profit }} рублей
+            </div>
+        </div>
+        <div class="portfolio__asset">
+            <h2>Активы:</h2>
+            <table class="portfolio__table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Название</th>
+                        <th>Тип</th>
+                        <th>Стоимость</th>
+                        <th>Валюта</th>
+                        <th>Отрасль</th>
+                        <th>Кол-во</th>
+                        <th>Коэффициент риска</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in object_list.stock %}
+                    <tr class="rows-table-portfolio">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.type__name }}</td>
+                        <td>{{ item.price }}</td>
+                        <td>{{ item.currency__name }}</td>
+                        <td>{{ item.branch__name }}</td>
+                        <td>{{ item.package__count }}</td>
+                        <td>{{ item.risk }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <section class="analitic">
+        <h1>Анализ</h1>
+        <h2>Диверсификация:</h2>
+        <table class="analitic__table">
+            <tr>
+                <td class='analitic-title' colspan="2">Отрасли</td>
+            </tr>
+
+            {% for key, value in object_list.divBranch.items %}
+                <tr class="rows-table-analitic">
+                    <td>{{ key }}</td>
+                    <td>{{ value }}%</td>
+                </tr>
+            {% endfor %}
+                <tr>
+                    <td class='analitic-title' colspan="2">Типы ценных бумаг</td>
+                </tr>
+
+            {% for key, value in object_list.divType.items %}
+                <tr class="rows-table-analitic">
+                    <td>{{ key }}</td>
+                    <td>{{ value }}%</td>
+                </tr>
+            {% endfor %}
+                <tr class="rows-table">
+                    <td class='analitic-title' colspan="2">Валюта</td>
+                </tr>
+
+            {% for key, value in object_list.divCurrency.items %}
+                <tr class="rows-table-analitic">
+                    <td>{{ key }}</td>
+                    <td>{{ value }}%</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="chart">
+            <div style="width: 33%;">
+                <canvas id="branch"></canvas>
+            </div>
+            <div style="width: 33%;">
+                <canvas id="type"></canvas>
+            </div>
+            <div style="width: 33%;">
+                <canvas id="currency"></canvas>
+            </div>
+        </div>
+        <div class="status">
+            <div class="error">
+                <h2>Риски портфеля:</h2>
+                <ol>
+                    {% for item in object_list.error%}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+            <div class="recomend">
+                <h2>Рекомендации:</h2>
+                <ol>
+                    {% for item in object_list.recomend%}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </section>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>
+    <script>
+        var branchData = {{ object_list.divBranch| safe }}
+        var typeData = {{ object_list.divType| safe }}
+        var currencyData = {{ object_list.divCurrency| safe }}
+    </script>
+    <script src="{% static 'core/js/main.js' %}"></script>
+
+<!----------------------------------------------------->
+<!-------------------old version----------------------->
+
+
+    <!--<div class="header">
         <div class="header__name">{{object_list.user.name}}</div>
+        <div class="header__risk">{{object_list.user.type_risk}}</div>
+        <div class="header__risk">Доход: {{object_list.profit}} рублей</div>
+        <div class="header__risk">
+            Стоимость портфеля: {{object_list.all_price_rub}} рублей <br>
+            Стоимость портфеля: {{object_list.all_price_dol}} долларов
+        </div>
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
               Выбор пользователя    :
@@ -23,11 +188,6 @@
                 {% endfor %}
             </ul>
         </div>
-        <div class="header__risk">
-            Стоимость портфеля: {{object_list.all_price_rub}} рублей <br>
-            Стоимость портфеля: {{object_list.all_price_dol}} долларов
-        </div>
-        <div class="header__risk">{{object_list.user.type_risk}}</div>
     </div>
     <div class="main">
         <table class="package">
@@ -39,6 +199,7 @@
                     <th class='analiz-title'>Валюта</th>
                     <th class='analiz-title'>Отрасль</th>
                     <th class='analiz-title'>Кол-во</th>
+                    <th class="analiz-title">Коэффициент риска</th>
                 </tr>
             </thead>
             <tbody>
@@ -50,6 +211,7 @@
                     <td>{{item.currency__name}}</td>
                     <td>{{item.branch__name}}</td>
                     <td>{{item.package__count}}</td>
+                    <td>{{item.risk}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -146,5 +308,7 @@
         var currencyData = {{ object_list.divCurrency|safe }}
     </script>
     <script src="{% static 'core/js/main.js' %}"></script>
+-->
 </body>
+
 </html>

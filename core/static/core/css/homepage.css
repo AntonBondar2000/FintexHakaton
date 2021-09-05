@@ -4,7 +4,101 @@
     padding: 0;
     color: black;
 }
-.header{
+header{
+    display: flex;
+    justify-content: space-between;
+    height: 100px;
+    align-items: center;
+    padding: 0 40px;
+    box-shadow: 0px 3px 25px 1px rgba(0,0,0,.5);
+}
+.user{
+    display: flex;
+    align-items: center;
+}
+.user__text{
+    font-size: 24px;
+}
+.user__text:nth-child(2){
+    margin-left: 100px;
+    font-size: 22px;
+}
+.portfolio{
+    margin-top: 50px;
+    padding: 0 40px;
+}
+.portfolio__chars{
+    margin-top: 55px;
+}
+.portfolio__text{
+    font-size: 22px;
+    margin-top: 15px;
+}
+.portfolio__asset{
+    margin-top: 15px;
+}
+h2{
+    font-size: 22px !important;
+}
+.portfolio__table{
+    width: 100%;
+    text-align: center;
+    margin-top: 25px;
+}
+.portfolio__table th, .portfolio__table td, .analitic__table th , .analitic__table td{
+    border: 1px solid black;
+    padding: 10px 0;
+}
+.rows-table-portfolio:nth-child(even){
+    background-color: #eceaea;
+}
+.portfolio__table th{
+    background-color: #c8c8c8;
+}
+
+.analitic{
+    padding: 0 40px;
+    margin-top: 70px;
+}
+.analitic__table{
+    width: 100%;
+    margin-top: 25px;
+    text-align: center;
+}
+.analitic-title{
+    background-color: #c8c8c8;
+    font-weight: bold;
+}
+.rows-table-analitic:nth-child(odd){
+    background-color: #eceaea;
+}
+.analitic h2{
+    margin-top: 55px;
+}
+.chart{
+    padding: 0 40px;
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+.status{
+    margin-top: 55px;
+    padding-bottom: 100px;
+}
+.error, .recomend{
+    width: 100%;
+    border-bottom: 1px solid black;
+    padding: 0 0 10px 0;
+}
+.error ol, .recomend ol{
+    margin-top: 25px;
+    font-size: 18px;
+}
+
+/*-----------------------------------------------*/
+/*----------old version--------------------------*/
+
+/*.header{
     border-bottom: 1px solid black;
     display: flex;
     justify-content: space-between;
@@ -67,3 +161,4 @@
     margin-top: 25px;
     
 }
+*/
