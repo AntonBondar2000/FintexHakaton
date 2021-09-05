@@ -36,10 +36,10 @@
 
 <h2>УСТАНОВКА</h2>
 <h3>Выполните</h3>
-<code>"pip install django
-git clone https://github.com/AntonBondar2000/FintexHakaton
-"</code>
-<p>Разработчики</p>
+<code>pip install django</code>
+<code>git clone https://github.com/AntonBondar2000/FintexHakaton
+</code>
+<h2><p>Разработчики</p></h2>
 <h4>Бондарь Антон web fullstack @bondar_a_vlg</h4>
 <h4>Рыбкин Дмитрий web @legionD3D</h4>
 <h4>Тристанова Виктория web @v_tristanova</h4>
