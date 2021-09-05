@@ -69,6 +69,7 @@
                         <th>Валюта</th>
                         <th>Отрасль</th>
                         <th>Кол-во</th>
+                        <th>Дата покупки</th>
                         <th>Коэффициент риска</th>
                     </tr>
                 </thead>
@@ -82,6 +83,7 @@
                         <td>{{ item.currency__name }}</td>
                         <td>{{ item.branch__name }}</td>
                         <td>{{ item.package__count }}</td>
+                        <td>{{ item.package__date_buy }}</td>
                         <td>{{ item.risk }}</td>
                     </tr>
                     {% endfor %}

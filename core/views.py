@@ -20,7 +20,18 @@ class Home(ListView):
         user = Profile.objects.get(id=id)
         profit = self.profit_package(id)
         error, recomend = [], []
-        stock = Stock.objects.filter(package__profile=user).values('name', 'type__name', 'currency__name', 'price', 'branch__name', 'package__count', 'risk')
+        stock = Stock.objects.filter(
+            package__profile=user
+        ).values(
+            'name', 
+            'type__name', 
+            'currency__name', 
+            'price', 
+            'branch__name', 
+            'package__count', 
+            'risk', 
+            'package__date_buy'
+        )
         if user.type_risk.name == "Агрессивный":
             error, recomend = self.recomend_agressive(divers_branch, divers_type, divers_currency, stock)
         elif user.type_risk.name == "Умеренный":
