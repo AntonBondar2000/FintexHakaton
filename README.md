@@ -36,8 +36,8 @@
 
 <h2>УСТАНОВКА</h2>
 <h3>Выполните</h3>
-<code><p>pip install django</p></code>
-<code><p>git clone https://github.com/AntonBondar2000/FintexHakaton</p></code>
+<pre><code>pip install django
+git clone https://github.com/AntonBondar2000/FintexHakaton</pre></code>
 <h2><p>Разработчики</p></h2>
 <h4>Бондарь Антон web fullstack @bondar_a_vlg</h4>
 <h4>Рыбкин Дмитрий web @legionD3D</h4>
