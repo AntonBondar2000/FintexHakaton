@@ -27,6 +27,7 @@ var chart = new Chart(ctx, {
             display: true,
             text: 'Диверсификация по отраслям',
             position: 'bottom',
+            fontColor: '#000000',
             fontSize: 16,
             padding: 20
         }
