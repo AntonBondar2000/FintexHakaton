@@ -24,7 +24,7 @@
 
 <h4>Демо</h4>
 <ul>
-	<li>HTML, CSS, JavaScript.</li>
+	<li>http://5.63.153.26:8000/user/1</li>
   
  </ul>
 
